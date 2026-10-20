@@ -1,0 +1,17 @@
+<resources>
+    <string name="widget_battery_unknown">—</string>
+    <string name="widget_tap_refresh">Tap to refresh</string>
+    <string name="widget_battery_periodic">Battery updates periodically</string>
+    <string name="widget_open_calendar">Open Calendar  ›</string>
+    <string name="widget_music_title">Your music</string>
+    <string name="widget_music_unknown_title">Now playing</string>
+    <string name="widget_music_active">Your media session</string>
+    <string name="widget_music_access_off">Media access is off. Open Player to listen.</string>
+    <string name="widget_music_no_session">No active session. Open Player to listen.</string>
+    <string name="widget_media_previous">Previous track</string>
+    <string name="widget_media_next">Next track</string>
+    <string name="widget_media_play">Play</string>
+    <string name="widget_media_pause">Pause</string>
+    <string name="widget_media_open">Player</string>
+    <string name="widget_media_action_unavailable">This media action is unavailable. Open your player or reconnect media in Sid Glass OS.</string>
+</resources>

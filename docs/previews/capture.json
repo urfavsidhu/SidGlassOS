@@ -1,0 +1,11 @@
+{
+  "captured_at_utc": "2026-10-20T04:22:42.717383+00:00",
+  "avd": "SidGlassOS_API36",
+  "serial": "emulator-5580",
+  "android": "16",
+  "api": "36",
+  "build": "sdk_gphone64_x86_64-userdebug 16 BE2A.250530.026.F3 13894323 dev-keys",
+  "wallpaper_apply_observed": true,
+  "screenshots": "Unedited PNGs returned by Android screencap",
+  "workspace_debug_apk_sha256": "B4636D922BE94EF61862C1D24EFE618A6B48E21ADABFFF10CB06E1E4A26AAE39"
+}

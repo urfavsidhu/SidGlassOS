@@ -1,0 +1,14 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/widget_root"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:minHeight="150dp" android:padding="4dp">
+    <ImageView android:id="@+id/widget_background" android:layout_width="match_parent" android:layout_height="match_parent"
+        android:src="@drawable/widget_glass_background" android:scaleType="fitXY" android:importantForAccessibility="no" android:contentDescription="@null" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="vertical" android:padding="20dp">
+        <TextView android:id="@+id/widget_title" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/widget_battery_unknown" android:textColor="#DDE5F4" android:textSize="36sp" android:fontFamily="sans-serif-light" android:includeFontPadding="false" />
+        <ProgressBar android:id="@+id/widget_battery_progress" style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent" android:layout_height="8dp" android:layout_marginTop="10dp" android:max="100"
+            android:progress="0" android:indeterminate="false" android:progressTint="#B8D4FF" android:progressBackgroundTint="#554B5FD1" />
+        <TextView android:id="@+id/widget_subtitle" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:text="@string/widget_tap_refresh" android:textSize="13sp" android:textColor="#DDE5F4" android:layout_marginTop="8dp" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,22 @@
+{
+  "serial": "emulator-5580",
+  "avd": "SidGlassOS_API36",
+  "android": "16",
+  "api": "36",
+  "artifacts": {
+    "app": {
+      "file": "app/build/outputs/apk/debug/app-debug.apk",
+      "bytes": 65307933,
+      "sha256": "B4636D922BE94EF61862C1D24EFE618A6B48E21ADABFFF10CB06E1E4A26AAE39"
+    },
+    "test": {
+      "file": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+      "bytes": 2408712,
+      "sha256": "0A374F303043FF655D06075C53BE75DA464E56CEA035112ABE03CC03E99E3B5B"
+    }
+  },
+  "passed": true,
+  "expected_tests": 5,
+  "crash_log_empty": true,
+  "finished_at_utc": "2026-10-20T04:26:07.528339+00:00"
+}

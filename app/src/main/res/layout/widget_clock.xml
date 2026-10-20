@@ -1,0 +1,13 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/widget_root"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:minHeight="110dp" android:padding="4dp">
+    <ImageView android:id="@+id/widget_background" android:layout_width="match_parent" android:layout_height="match_parent"
+        android:src="@drawable/widget_glass_background" android:scaleType="fitXY" android:importantForAccessibility="no" android:contentDescription="@null" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="vertical" android:padding="20dp">
+        <TextClock android:id="@+id/widget_clock" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:format12Hour="h:mm" android:format24Hour="HH:mm" android:fontFamily="sans-serif-light"
+            android:textColor="#DDE5F4" android:textSize="48sp" android:maxLines="1" android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="28sp" android:autoSizeMaxTextSize="48sp" android:includeFontPadding="false" />
+        <TextClock android:id="@+id/widget_date" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:format12Hour="EEE, d MMM" android:format24Hour="EEE, d MMM" android:textSize="14sp" android:textColor="#DDE5F4" android:layout_marginTop="6dp" />
+    </LinearLayout>
+</FrameLayout>
