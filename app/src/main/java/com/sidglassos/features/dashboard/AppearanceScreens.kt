@@ -76,6 +76,7 @@ fun SettingsScreen(settings: GlassSettings, save: (GlassSettings) -> Unit, reset
                 }
             }
             Text("Balanced limits live wallpaper to 24 fps. Battery Saver uses a still scene.", style = MaterialTheme.typography.bodySmall)
+            Text("Supported devices soften glass backgrounds with blur. Battery Saver keeps tinted glass surfaces without blur.", style = MaterialTheme.typography.bodySmall)
             PreferenceSwitch("Reduce motion", "Keep the wallpaper still", settings.reducedMotion) { save(settings.copy(reducedMotion = it)) }
             PreferenceSwitch("High-contrast surfaces", "Increase glass opacity for readability", settings.glassOpacity >= .55f) { save(settings.copy(glassOpacity = if (it) .65f else .16f)) }
         }

@@ -2,6 +2,7 @@ package com.sidglassos.features.widgets
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +22,9 @@ import com.sidglassos.core.design.GlassCard
 import com.sidglassos.core.design.GlassSlider
 import com.sidglassos.core.storage.GlassSettings
 import com.sidglassos.features.media.GlassMediaCard
+import com.sidglassos.features.launcher.LauncherActivity
+import com.sidglassos.features.launcher.LauncherWidgetHost
+import com.sidglassos.core.platform.openSafely
 
 @Composable
 fun WidgetsScreen(settings: GlassSettings, onBack: () -> Unit,
@@ -48,6 +52,10 @@ fun WidgetsScreen(settings: GlassSettings, onBack: () -> Unit,
             Text("Small moments, beautifully", style = MaterialTheme.typography.headlineSmall)
         }
         Text("Native Android widgets for a home screen that feels like yours.", style = MaterialTheme.typography.bodyLarge)
+        Button(onClick = { context.openSafely(Intent(context, LauncherActivity::class.java)
+            .putExtra(LauncherWidgetHost.OPEN_PICKER, true)) }, modifier = Modifier.fillMaxWidth()) {
+            Text("Add widgets inside Sid Home")
+        }
         WidgetCard("Digital clock", "Large native clock and date. Follows the phone's 12/24-hour preference and opens Alarms.",
             settings) { pin(ClockWidgetProvider::class.java) }
         WidgetCard("Battery", "Battery percentage, charge state and a glass progress bar. Tap the widget to refresh its reading.",
@@ -86,7 +94,7 @@ fun WidgetsScreen(settings: GlassSettings, onBack: () -> Unit,
         }
         Text("Battery readings refresh when added, resized, tapped, or at the system's periodic widget update (about 30 minutes, possibly deferred). The information card refreshes periodically. No battery polling service runs.",
             style = MaterialTheme.typography.bodySmall)
-        Text("Add widgets to a launcher that supports Android widgets, such as your original OPPO home screen. The Sid launcher does not host third-party widgets in this version.",
+        Text("Use Add widgets inside Sid Home to select Sid or other installed widgets. The Add buttons above use your default launcher's pinning flow when supported.",
             style = MaterialTheme.typography.bodySmall)
         Spacer(Modifier.height(20.dp))
     }

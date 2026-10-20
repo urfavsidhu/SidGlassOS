@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
@@ -51,22 +53,39 @@ fun GlassTheme(content: @Composable () -> Unit) {
     }
 }
 
-/** A graded translucent surface. This intentionally does not blur foreground content. */
+/** A shared optical treatment; any supported blur is confined to the scene behind its content. */
+@Composable
+fun GlassSurface(
+    modifier: Modifier = Modifier,
+    opacity: Float = .16f,
+    shape: Shape = RoundedCornerShape(28.dp),
+    content: @Composable BoxScope.() -> Unit,
+) {
+    val safeOpacity = opacity.takeIf { it.isFinite() }?.coerceIn(.05f, .9f) ?: .16f
+    Box(modifier.shadow(10.dp, shape, clip = false,
+        ambientColor = GlassColors.Navy.copy(alpha = .3f), spotColor = GlassColors.Navy.copy(alpha = .4f))
+        .clip(shape)
+        .border(BorderStroke(1.dp, Brush.linearGradient(listOf(
+            Color.White.copy(alpha = .62f), Color(0xFFC1D8FF).copy(alpha = .1f),
+            Color(0xFFADB5FF).copy(alpha = .3f)))), shape)) {
+        GlassBackdropLayer(Modifier.matchParentSize())
+        Box(Modifier.matchParentSize().background(Brush.linearGradient(listOf(
+            Color.White.copy(alpha = safeOpacity),
+            Color(0xFF899FE8).copy(alpha = safeOpacity * .55f),
+            GlassColors.Navy.copy(alpha = .32f)))))
+        Box(Modifier.matchParentSize().background(Brush.verticalGradient(listOf(
+            Color.White.copy(alpha = .06f), Color.Transparent, Color(0xFF6686D9).copy(alpha = .04f)))))
+        content()
+    }
+}
+
 @Composable
 fun GlassCard(
     modifier: Modifier = Modifier,
     opacity: Float = .16f,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val shape = RoundedCornerShape(28.dp)
-    val safeOpacity = opacity.takeIf { it.isFinite() }?.coerceIn(.05f, .9f) ?: .16f
-    Column(
-        modifier.clip(shape)
-            .background(Brush.linearGradient(listOf(Color.White.copy(alpha = safeOpacity), Color(0xFF899FE8).copy(alpha = safeOpacity * .55f), GlassColors.Navy.copy(alpha = .4f))))
-            .border(BorderStroke(1.dp, Brush.linearGradient(listOf(Color.White.copy(alpha = .46f), Color.White.copy(alpha = .04f), Color.White.copy(alpha = .18f)))), shape)
-            .padding(20.dp),
-        content = content,
-    )
+    GlassSurface(modifier, opacity) { Column(Modifier.padding(20.dp), content = content) }
 }
 
 @Composable

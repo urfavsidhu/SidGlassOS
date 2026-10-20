@@ -5,12 +5,15 @@
 param(
     [string]$JavaHome,
     [switch]$KeepRunning,
+    [switch]$BootOnly,
+    [ValidateRange(1, 10000)][int]$ExpectedTests = 10,
     [ValidateRange(60, 1200)][int]$BootTimeoutSeconds = 420,
     [ValidateRange(30, 1800)][int]$TestTimeoutSeconds = 600
 )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+if ($BootOnly -and -not $KeepRunning) { throw '-BootOnly requires -KeepRunning so the booted test VM remains available.' }
 $projectRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $toolsRoot = Join-Path $projectRoot '.tools'
 $sdkRoot = Join-Path $toolsRoot 'android-sdk'
@@ -222,6 +225,7 @@ try {
         Start-Sleep -Seconds 3
     }
     if (-not $booted) { throw "Project emulator did not finish booting within $BootTimeoutSeconds seconds." }
+    if ($BootOnly) { Write-Host 'Owned emulator booted. No installation or UI tests were performed by this boot-only run.'; return }
 
     foreach ($package in @($appApk, $testApk)) {
         $installation = Invoke-ProjectAdb -Arguments @('install', '-r', $package) -TimeoutSeconds 180
@@ -253,7 +257,7 @@ try {
     $passed = [regex]::Match($testOutput, '(?m)^\s*OK\s+\((\d+)\s+tests?\)\s*$')
     if (-not $passed.Success -or [int]$passed.Groups[1].Value -le 0 -or $testOutput -notmatch '(?m)^INSTRUMENTATION_CODE:\s*-1\s*$') { throw 'Instrumentation did not report a positive test count and successful completion. No test pass is inferred.' }
     $testCount = [int]$passed.Groups[1].Value
-    if ($testCount -ne 5) { Write-Warning "Expected five authored UI tests; runner reported $testCount. Review discovery in the saved instrumentation log." }
+    if ($testCount -ne $ExpectedTests) { throw "Expected $ExpectedTests authored UI tests; runner reported $testCount. Review discovery in the saved instrumentation log." }
     Write-RunFile 'result.json' ([PSCustomObject]@{Passed=$true;Tests=$testCount;Serial=$serial;Avd=$avdName;EmulatorPID=$emulatorProcess.Id;CompletedUTC=[DateTime]::UtcNow.ToString('o')} | ConvertTo-Json)
     Write-Host "PASS: Android runner reported OK ($testCount tests). This emulator result does not verify OPPO/ColorOS hardware behavior."
 } finally {

@@ -61,9 +61,7 @@ class DashboardActivity : ComponentActivity() {
                         model.dismissMessage()
                     }
                 }
-                Box(Modifier.fillMaxSize().background(GlassColors.Navy)) {
-                    ForestBackdrop(Modifier.fillMaxSize())
-                    Box(Modifier.fillMaxSize().background(GlassColors.Navy.copy(alpha = .48f)))
+                GlassScene(settings ?: GlassSettings()) {
                     val current = settings
                     if (current == null) CircularProgressIndicator(Modifier.align(Alignment.Center))
                     else Dashboard(current, requestedRoute, routeRequest, save, model::reset)

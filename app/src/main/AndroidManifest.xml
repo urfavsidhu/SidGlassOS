@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <!-- Required by the documented AppWidgetHost contract. A regular app does NOT receive
+         this signature permission: bindAppWidgetIdIfAllowed + ACTION_APPWIDGET_BIND ask the
+         user for each binding. This narrow lint exception does not grant or bypass access.
+         https://developer.android.com/develop/ui/views/appwidgets/host -->
+    <uses-permission android:name="android.permission.BIND_APPWIDGET" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />

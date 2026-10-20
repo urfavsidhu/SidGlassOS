@@ -18,6 +18,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -76,6 +77,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.sidglassos.core.design.GlassColors
 import com.sidglassos.core.design.GlassSymbols
 import com.sidglassos.core.design.GlassTheme
+import com.sidglassos.core.design.GlassRuntime
+import com.sidglassos.core.design.GlassSurface
+import com.sidglassos.core.design.ModalWindowBlur
 import com.sidglassos.core.storage.GlassSettings
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -87,6 +91,12 @@ import java.time.format.FormatStyle
 class LauncherActivity : ComponentActivity() {
     private val launcher: LauncherViewModel by viewModels()
     private var homeGeneration by mutableIntStateOf(0)
+    private var widgetPickerRequest by mutableIntStateOf(0)
+    internal lateinit var widgetHost: LauncherWidgetHost
+        private set
+    private val widgetBinding = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (::widgetHost.isInitialized) widgetHost.bindingResult(it.resultCode)
+    }
     private var receiverRegistered = false
     private val packageChanges = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) { launcher.refresh(invalidateIcons = true) }
@@ -101,13 +111,25 @@ class LauncherActivity : ComponentActivity() {
         )
         window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
         window.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-        setContent { GlassTheme { LauncherScreen(launcher, homeGeneration) } }
+        widgetHost = LauncherWidgetHost(this)
+        if (intent.getBooleanExtra(LauncherWidgetHost.OPEN_PICKER, false)) widgetPickerRequest++
+        setContent { GlassTheme { LauncherScreen(launcher, homeGeneration, widgetHost, widgetPickerRequest) } }
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
         homeGeneration++
+        if (intent.getBooleanExtra(LauncherWidgetHost.OPEN_PICKER, false)) widgetPickerRequest++
+    }
+
+    internal fun requestWidgetBinding(intent: Intent) { widgetBinding.launch(intent) }
+
+    @Deprecated("AppWidgetHost configuration uses the platform's request-code result API")
+    @Suppress("DEPRECATION")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == LauncherWidgetHost.REQUEST_CONFIGURE) widgetHost.configurationResult(resultCode)
     }
 
     override fun onStart() {
@@ -122,12 +144,16 @@ class LauncherActivity : ComponentActivity() {
         ContextCompat.registerReceiver(this, packageChanges, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
         receiverRegistered = true
         launcher.refresh()
+        widgetHost.start()
     }
 
     override fun onStop() {
         if (receiverRegistered) { unregisterReceiver(packageChanges); receiverRegistered = false }
+        widgetHost.stop()
         super.onStop()
     }
+
+    override fun onDestroy() { widgetHost.dispose(); super.onDestroy() }
 
     override fun onTrimMemory(level: Int) {
         super.onTrimMemory(level)
@@ -150,7 +176,7 @@ private fun openApp(context: Context, app: LaunchableApp) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
+private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int, widgetHost: LauncherWidgetHost, widgetPickerRequest: Int) {
     val context = LocalContext.current
     val settings by model.settings.collectAsStateWithLifecycle()
     val state by model.appState.collectAsStateWithLifecycle()
@@ -161,6 +187,7 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
     var editing by rememberSaveable { mutableStateOf(false) }
     var selected by remember { mutableStateOf<LaunchableApp?>(null) }
     var query by rememberSaveable { mutableStateOf("") }
+    var widgetPickerOpen by rememberSaveable { mutableStateOf(false) }
     val windowSize = LocalWindowInfo.current.containerSize
     val density = LocalDensity.current
     val windowWidthDp = with(density) { windowSize.width.toDp().value }
@@ -175,7 +202,8 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
     val rowHeight = fittedIconSize + (if (settings.showLabels) settings.labelSize * density.fontScale else 0f) + 34
     val rows = ((windowHeightDp - if (compactHeight) 280 else 370) / rowHeight).toInt().coerceIn(1, 4)
     val pageCapacity = columns * rows
-    val pageCount = ((home.size + pageCapacity - 1) / pageCapacity).coerceAtLeast(1)
+    val appPageCount = ((home.size + pageCapacity - 1) / pageCapacity).coerceAtLeast(1)
+    val pageCount = appPageCount + widgetHost.widgets.size
     val pager = rememberPagerState { pageCount }
     val bounds = remember { mutableStateMapOf<String, Rect>() }
     var dragged by remember { mutableStateOf<String?>(null) }
@@ -184,7 +212,17 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
     val lifecycleOwner = LocalLifecycleOwner.current
     var now by remember { mutableStateOf(LocalDateTime.now()) }
 
-    LaunchedEffect(homeGeneration) { drawerOpen = false; selected = null; editing = false; query = "" }
+    LaunchedEffect(homeGeneration) { drawerOpen = false; selected = null; editing = false; query = ""; widgetPickerOpen = false }
+    LaunchedEffect(widgetPickerRequest) { if (widgetPickerRequest > 0) widgetPickerOpen = true }
+    LaunchedEffect(widgetHost.navigationRequest) {
+        if (widgetHost.navigationRequest > 0) {
+            val index = widgetHost.widgets.indexOfFirst { it.id == widgetHost.lastAddedId }
+            if (index >= 0) pager.scrollToPage(appPageCount + index)
+        }
+    }
+    LaunchedEffect(widgetHost.message) {
+        widgetHost.message?.let { Toast.makeText(context, it, Toast.LENGTH_LONG).show(); widgetHost.dismissMessage() }
+    }
 
     LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -197,8 +235,9 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
         }
     }
     LaunchedEffect(pageCount) { if (pager.currentPage >= pageCount) pager.scrollToPage(pageCount - 1) }
-    BackHandler { drawerOpen = false; selected = null; editing = false }
+    BackHandler { drawerOpen = false; selected = null; editing = false; widgetPickerOpen = false }
 
+    GlassRuntime(settings) {
     Box(Modifier.fillMaxSize().background(Color.Black.copy(alpha = .08f))) {
         // The home activity intentionally follows the actual Android wallpaper, including other wallpaper apps.
         Column(Modifier.fillMaxSize().systemBarsPadding().padding(horizontal = 16.dp)) {
@@ -217,7 +256,14 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
                 TextButton(onClick = { model.refresh(invalidateIcons = true) }) { Text("Retry loading apps") }
             }
             if (state.loading && home.isEmpty()) LinearProgressIndicator(Modifier.fillMaxWidth().padding(vertical = 12.dp))
+            PendingWidgetNotice(widgetHost)
             HorizontalPager(pager, modifier = Modifier.weight(1f).fillMaxWidth().padding(top = 20.dp), verticalAlignment = Alignment.Top, userScrollEnabled = dragged == null) { page ->
+                if (page >= appPageCount) {
+                    widgetHost.widgets.getOrNull(page - appPageCount)?.let {
+                        HostedWidgetPage(it, widgetHost, page - appPageCount, widgetHost.widgets.size)
+                    }
+                    return@HorizontalPager
+                }
                 val pageApps = home.drop(page * pageCapacity).take(pageCapacity)
                 if (pageApps.isEmpty()) {
                     Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
@@ -265,10 +311,15 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
             if (pageCount > 1) Row(Modifier.fillMaxWidth().padding(8.dp), horizontalArrangement = Arrangement.Center) {
                 repeat(pageCount) { page -> Box(Modifier.padding(3.dp).size(if (page == pager.currentPage) 7.dp else 5.dp).clip(CircleShape).background(Color.White.copy(alpha = if (page == pager.currentPage) .95f else .35f))) }
             }
-            TextButton(onClick = { drawerOpen = true }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            TextButton(onClick = { drawerOpen = true }) {
                 Icon(Icons.Outlined.Apps, null); Spacer(Modifier.width(8.dp)); Text("All apps")
             }
-            Surface(color = Color.White.copy(alpha = settings.glassOpacity.coerceIn(.08f, .5f)), shape = RoundedCornerShape(30.dp), border = BorderStroke(1.dp, Color.White.copy(alpha = .22f)), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
+            TextButton(onClick = { widgetPickerOpen = true }) {
+                Icon(Icons.Outlined.Widgets, null); Spacer(Modifier.width(8.dp)); Text("Widgets")
+            }
+            }
+            GlassSurface(opacity = settings.glassOpacity.coerceIn(.08f, .5f), shape = RoundedCornerShape(30.dp), modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)) {
                 Row(Modifier.padding(horizontal = 8.dp, vertical = 12.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
                     dock.forEach { app ->
                         LauncherAppCell(app, settings.copy(showLabels = false, iconSize = settings.iconSize.coerceAtMost(60)), model.catalog, state.iconGeneration, { openApp(context, app) }, { selected = app }, Modifier.weight(1f))
@@ -280,7 +331,8 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
     }
 
     if (drawerOpen) {
-        ModalBottomSheet(onDismissRequest = { drawerOpen = false }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = GlassColors.Navy.copy(alpha = .98f)) {
+        ModalBottomSheet(onDismissRequest = { drawerOpen = false }, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = GlassColors.Navy.copy(alpha = .94f)) {
+            ModalWindowBlur()
             Column(Modifier.fillMaxHeight(.94f).padding(horizontal = 16.dp)) {
                 Text("Your apps", style = MaterialTheme.typography.headlineSmall)
                 OutlinedTextField(value = query, onValueChange = { query = it }, placeholder = { Text("Search apps or packages") }, leadingIcon = { Icon(Icons.Outlined.Search, null) }, trailingIcon = { if (query.isNotEmpty()) IconButton(onClick = { query = "" }) { Icon(Icons.Outlined.Close, "Clear search") } }, singleLine = true, modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp), shape = RoundedCornerShape(24.dp))
@@ -294,6 +346,7 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
             }
         }
     }
+    if (widgetPickerOpen) WidgetPicker(widgetHost, onClose = { widgetPickerOpen = false })
     selected?.let { app ->
         AppOptions(app, settings, onDismiss = { selected = null }, onOpen = { selected = null; drawerOpen = false; openApp(context, app) },
             onHome = { if (app.id in settings.homeOrder) model.removeHome(app.id) else model.addHome(app.id); selected = null },
@@ -302,6 +355,7 @@ private fun LauncherScreen(model: LauncherViewModel, homeGeneration: Int) {
             onAssign = { model.assignIcon(app.id, it) },
             onInfo = { selected = null; launchSafely(context, Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", app.packageName, null))) },
         )
+    }
     }
 }
 
