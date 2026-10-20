@@ -1,3 +1,4 @@
 <resources>
+    <string name="widget_host_error">The widget could not be displayed. Try reopening Home.</string>
     <string name="app_name">Sid Glass OS</string>
 </resources>

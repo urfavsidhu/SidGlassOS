@@ -96,10 +96,10 @@ Also inspect Settings > About device for the ColorOS version; proprietary proper
 - [ ] Live engine stops scheduled rendering when hidden/surface destroyed, and resumes safely after unlock/rotation/preview removal.
 - [ ] Particle/intensity/parallax/reduced-motion settings persist; unavailable parallax does not break rendering.
 - [ ] Battery Saver reduces work; static wallpaper fallback remains functional after rendering errors/low memory.
-- [ ] Add, resize, reconfigure and remove each native widget in OPPO launcher and Sid Glass OS if it hosts widgets. IDs/configuration do not leak or corrupt.
+- [ ] Add, resize, reconfigure and remove each native widget in both OPPO launcher and Sid Home. IDs/configuration do not leak or corrupt.
 - [ ] Native clock remains correct across minute, date, locale, time-zone and 12/24-hour changes without a one-second background polling service.
 - [ ] Battery widget refresh/freshness is honest after charging changes, screen off and process death.
-- [ ] If hosting third-party widgets, cancel bind/configuration, deny permission and reboot; no broken permanent items or repeated prompts.
+- [ ] For hosted widgets, cancel bind/configuration, deny permission and reboot; no broken permanent items or repeated prompts.
 - [ ] Record cross-window-blur support where implemented. Disable via Battery Saver/developer option if available; cards remain readable with fallback.
 - [ ] Confirm Compose/RenderEffect blur is not described as live backdrop blur unless it actually samples the intended app-owned background.
 

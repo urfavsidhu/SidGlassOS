@@ -4,11 +4,11 @@ The Android Studio project lives at the workspace root. A single `:app` build mo
 
 ```text
 app/src/main/java/com/sidglassos/
-  core/design/       Compose theme, glass components, original symbols
+  core/design/       Compose theme, bounded scene blur, capability/power policy, glass surfaces
   core/storage/      DataStore settings, launcher layout and icon assignments
   core/platform/     Safe intent launching and device facts
   features/dashboard/  Navigation, customization dashboard, settings, previews
-  features/launcher/   HOME activity, launcher package catalog and icon cache
+  features/launcher/   HOME activity, app catalog/cache, AppWidgetHost, persisted widget pages
   features/controlcenter/ In-app controls and Quick Settings entry tile
   features/media/       Optional local media sessions, permission disclosure and shared music card
   features/wallpapers/  Shared forest renderer, live service, static application
@@ -22,6 +22,10 @@ app/src/main/java/com/sidglassos/
 Preferences are local DataStore values. App catalog queries only launcher activities; no broad `QUERY_ALL_PACKAGES`, usage access, contacts, location, or storage access. Original application components are used for launching; icon styling is confined to Sid Glass OS.
 
 The live wallpaper owns a visible-surface render loop with bounded FPS and Canvas assets. Static wallpapers are generated off the main thread and applied only after an explicit action. Widgets use documented AppWidget/RemoteViews APIs, not a persistent update service.
+
+Hosted widgets use a stable AppWidgetHost ID and native AndroidView/AppWidgetHostView interoperability. App-private preferences store widget IDs, heights, order and pending binding/configuration state. Listening follows Activity onStart/onStop; cancel/remove releases IDs, and activity destruction releases view references. Appearance reset preserves widget bindings.
+
+The dashboard shares one bounded forest texture with background-only RenderEffect layers. Modal windows use capability-gated public blur-behind APIs. Text and RemoteViews are separate sharp foregrounds. No screen capture or CPU blur loop is used.
 
 The control center is an Activity, with an optional system Quick Settings entry tile. Restricted system changes open official Settings screens. No overlay, notification listener, accessibility service or fake keyguard is enabled as a side effect of installation.
 

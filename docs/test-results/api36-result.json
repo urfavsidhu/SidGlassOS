@@ -6,17 +6,17 @@
   "artifacts": {
     "app": {
       "file": "app/build/outputs/apk/debug/app-debug.apk",
-      "bytes": 65307933,
-      "sha256": "B4636D922BE94EF61862C1D24EFE618A6B48E21ADABFFF10CB06E1E4A26AAE39"
+      "bytes": 66092401,
+      "sha256": "260CE1B8D5E9EEF406BD92B71B0DAA8D1CB4B82CE75642EFD44C98D405CFB7F7"
     },
     "test": {
       "file": "app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
-      "bytes": 2408712,
-      "sha256": "0A374F303043FF655D06075C53BE75DA464E56CEA035112ABE03CC03E99E3B5B"
+      "bytes": 4714896,
+      "sha256": "790255B7884C0972314520BC55A11C628C5C0F6ABF11D5431F1D82C0A318FD4E"
     }
   },
   "passed": true,
-  "expected_tests": 5,
+  "expected_tests": 10,
   "crash_log_empty": true,
-  "finished_at_utc": "2026-10-20T04:26:07.528339+00:00"
+  "finished_at_utc": "2026-10-20T09:23:36.120398+00:00"
 }

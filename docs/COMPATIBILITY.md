@@ -2,6 +2,8 @@
 
 Research date: 19 October 2026. This is an API feasibility report, not a record of successful device tests. Implementation and build status belong in the project README and validation records.
 
+Version 0.2.0 now implements capability-gated app-owned scene blur, public modal window blur, and native widget hosting inside Sid Home. Widgets use Android consent and provider configuration, with dedicated pages, persistence, vertical resizing and removal. See [current behavior and limits](GLASS_AND_HOSTING.md) and [actual validation](VALIDATION.md); feasibility below does not imply OPPO handset verification.
+
 ## Target and evidence boundary
 
 The user reports an unrooted OPPO A5 Pro 5G, 8 GB physical RAM, Dimensity 6300, ColorOS 16.0.5, build `CPH2695_16.0.5.1200`. These details have **not been read from a connected phone**. Do not infer its Android API level from the ColorOS name. Read `Build.VERSION.SDK_INT`, `Build.VERSION.RELEASE`, model/manufacturer and build display at runtime; cross-check Settings > About device. The OPPO Theme Store region, launcher restrictions, live wallpaper picker and GPU blur capability require tests on that exact build.
@@ -72,7 +74,7 @@ Notification mirroring, global brightness writes and floating overlays are not i
 
 `RenderEffect`/Compose layer blur acts on rendered content; applying it to a card does not automatically sample the pixels behind that card. Android 12/API 31+ cross-window background/behind blur is a different facility, requires appropriate translucent window configuration and is supported only on selected devices. [AOSP window blurs](https://source.android.com/docs/core/display/window-blurs)
 
-Check `WindowManager.isCrossWindowBlurEnabled` and register/unregister its change listener. Blur can turn off at runtime in battery saver or due to GPU/output conditions. A readable translucent fill and border must remain when blur disappears. Use cached, downsampled pre-blurred **app-owned** forest artwork for internal cards where useful, without claiming it is live system backdrop blur. [WindowManager](https://developer.android.com/reference/android/view/WindowManager#isCrossWindowBlurEnabled())
+Check `WindowManager.isCrossWindowBlurEnabled` and register/unregister its change listener. Blur can turn off at runtime in battery saver or due to GPU/output conditions. A readable translucent fill and border must remain when blur disappears. Version 0.2.0 samples a shared, bounded **app-owned** forest texture in a separate GPU-blurred background layer for internal cards. It does not sample arbitrary system wallpaper or blur foreground text. [WindowManager](https://developer.android.com/reference/android/view/WindowManager#isCrossWindowBlurEnabled())
 
 Balanced is the default design target; cap wallpaper rendering, reduce particles/motion in Battery Saver, and stop invisible work. Measure startup, frame times, memory and battery on the actual device before claiming a frame-rate or battery result.
 

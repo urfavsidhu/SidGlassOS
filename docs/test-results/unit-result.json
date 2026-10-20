@@ -1,0 +1,70 @@
+{
+  "totals": {
+    "tests": 27,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "name": "com.sidglassos.core.design.GlassEffectPolicyTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-20T09:08:59.972Z",
+      "hostname": "SIDHU",
+      "time": "0.015"
+    },
+    {
+      "name": "com.sidglassos.core.storage.GlassSettingsTest",
+      "tests": "7",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-20T09:08:59.991Z",
+      "hostname": "SIDHU",
+      "time": "0.052"
+    },
+    {
+      "name": "com.sidglassos.features.launcher.LayoutOrderTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-20T09:09:00.045Z",
+      "hostname": "SIDHU",
+      "time": "0.009"
+    },
+    {
+      "name": "com.sidglassos.features.launcher.WidgetLayoutPolicyTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-20T09:09:00.057Z",
+      "hostname": "SIDHU",
+      "time": "0.005"
+    },
+    {
+      "name": "com.sidglassos.features.media.MediaPolicyTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-20T09:09:00.065Z",
+      "hostname": "SIDHU",
+      "time": "0.006"
+    },
+    {
+      "name": "com.sidglassos.features.wallpapers.WallpaperFramePolicyTest",
+      "tests": "4",
+      "skipped": "0",
+      "failures": "0",
+      "errors": "0",
+      "timestamp": "2026-10-20T09:09:00.074Z",
+      "hostname": "SIDHU",
+      "time": "0.003"
+    }
+  ]
+}

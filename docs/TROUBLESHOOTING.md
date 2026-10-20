@@ -17,7 +17,7 @@
 | Brightness reverts on leaving Controls | The slider changes this app window only. Use Device display settings for global brightness. |
 | Live wallpaper absent on lock screen | Use the destinations offered by the official picker. If unavailable, apply a still lock wallpaper. A custom lock-screen layout is a design preview only. |
 | Music card has no title/controls | Connect media only if you choose to grant Android's notification access, then start playback in a player that exposes a media session. Some players omit metadata/actions. Revoke access through Manage access; the Open player fallback works without it. |
-| Widgets are not visible | Pin to a compatible current home or use its widget picker. This release's Sid Glass OS launcher does not implement external AppWidget hosting. |
+| Widgets are not visible | In Sid Home, tap Widgets or use dashboard Add widgets inside Sid Home. Complete Android consent/setup, then swipe past app pages. Pin buttons depend on the default home supporting pin requests. For a pending setup, cancel it and try again; for an unavailable provider, enable its app or remove the widget. |
 | Battery widget reading is old | Tap it to refresh. System-scheduled updates are inexact; clock/date use native TextClock and need no per-minute wakeups. |
 | Test notification is missing | Check system app/channel notification settings and permission. Do Not Disturb and channel settings can suppress visibility even when posting succeeds. |
 | Forest motion is still | Reduced motion, Battery Saver, system power saver, zero particles, or zero intensity intentionally stop the render timer. |

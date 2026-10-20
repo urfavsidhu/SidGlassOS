@@ -1,80 +1,301 @@
-INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
-INSTRUMENTATION_STATUS: current=1
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=
-com.sidglassos.DashboardSmokeTest:
-INSTRUMENTATION_STATUS: test=dashboardCanOpenControlsWithoutSpecialPermissions
-INSTRUMENTATION_STATUS_CODE: 1
-INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
-INSTRUMENTATION_STATUS: current=1
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=.
-INSTRUMENTATION_STATUS: test=dashboardCanOpenControlsWithoutSpecialPermissions
-INSTRUMENTATION_STATUS_CODE: 0
-INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
-INSTRUMENTATION_STATUS: current=2
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=
-INSTRUMENTATION_STATUS: test=appearancePageShowsAssignableOriginalSymbols
-INSTRUMENTATION_STATUS_CODE: 1
-INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
-INSTRUMENTATION_STATUS: current=2
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=.
-INSTRUMENTATION_STATUS: test=appearancePageShowsAssignableOriginalSymbols
-INSTRUMENTATION_STATUS_CODE: 0
-INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
-INSTRUMENTATION_STATUS: current=3
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=
-INSTRUMENTATION_STATUS: test=selectedPageSurvivesActivityRecreation
-INSTRUMENTATION_STATUS_CODE: 1
-INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
-INSTRUMENTATION_STATUS: current=3
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=.
-INSTRUMENTATION_STATUS: test=selectedPageSurvivesActivityRecreation
-INSTRUMENTATION_STATUS_CODE: 0
-INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.LauncherUiTest
-INSTRUMENTATION_STATUS: current=4
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=
-com.sidglassos.features.launcher.LauncherUiTest:
-INSTRUMENTATION_STATUS: test=homeIntentClosesTheDrawer
-INSTRUMENTATION_STATUS_CODE: 1
-INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.LauncherUiTest
-INSTRUMENTATION_STATUS: current=4
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=.
-INSTRUMENTATION_STATUS: test=homeIntentClosesTheDrawer
-INSTRUMENTATION_STATUS_CODE: 0
-INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.LauncherUiTest
-INSTRUMENTATION_STATUS: current=5
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=
-INSTRUMENTATION_STATUS: test=drawerSearchReportsAnEmptyResultWithoutLaunchingAnything
-INSTRUMENTATION_STATUS_CODE: 1
-INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.LauncherUiTest
-INSTRUMENTATION_STATUS: current=5
-INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
-INSTRUMENTATION_STATUS: numtests=5
-INSTRUMENTATION_STATUS: stream=.
-INSTRUMENTATION_STATUS: test=drawerSearchReportsAnEmptyResultWithoutLaunchingAnything
-INSTRUMENTATION_STATUS_CODE: 0
-INSTRUMENTATION_RESULT: stream=
-
-Time: 46.358
-
-OK (5 tests)
-
-
-INSTRUMENTATION_CODE: -1
+INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
+
+INSTRUMENTATION_STATUS: current=1
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+com.sidglassos.DashboardSmokeTest:
+
+INSTRUMENTATION_STATUS: test=dashboardCanOpenControlsWithoutSpecialPermissions
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
+
+INSTRUMENTATION_STATUS: current=1
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=dashboardCanOpenControlsWithoutSpecialPermissions
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
+
+INSTRUMENTATION_STATUS: current=2
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+INSTRUMENTATION_STATUS: test=appearancePageShowsAssignableOriginalSymbols
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
+
+INSTRUMENTATION_STATUS: current=2
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=appearancePageShowsAssignableOriginalSymbols
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
+
+INSTRUMENTATION_STATUS: current=3
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+INSTRUMENTATION_STATUS: test=selectedPageSurvivesActivityRecreation
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.DashboardSmokeTest
+
+INSTRUMENTATION_STATUS: current=3
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=selectedPageSurvivesActivityRecreation
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.LauncherUiTest
+
+INSTRUMENTATION_STATUS: current=4
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+com.sidglassos.features.launcher.LauncherUiTest:
+
+INSTRUMENTATION_STATUS: test=homeIntentClosesTheDrawer
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.LauncherUiTest
+
+INSTRUMENTATION_STATUS: current=4
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=homeIntentClosesTheDrawer
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.LauncherUiTest
+
+INSTRUMENTATION_STATUS: current=5
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+INSTRUMENTATION_STATUS: test=drawerSearchReportsAnEmptyResultWithoutLaunchingAnything
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.LauncherUiTest
+
+INSTRUMENTATION_STATUS: current=5
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=drawerSearchReportsAnEmptyResultWithoutLaunchingAnything
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=6
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+com.sidglassos.features.launcher.WidgetHostUiTest:
+
+INSTRUMENTATION_STATUS: test=canceledConfigurationDoesNotLeaveAWidgetOrAllocatedId
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=6
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=canceledConfigurationDoesNotLeaveAWidgetOrAllocatedId
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=7
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+INSTRUMENTATION_STATUS: test=nativeWidgetResizesSurvivesRecreationAndCanBeRemoved
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=7
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=nativeWidgetResizesSurvivesRecreationAndCanBeRemoved
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=8
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+INSTRUMENTATION_STATUS: test=requiredConfigurationRunsBeforeTheWidgetIsCommitted
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=8
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=requiredConfigurationRunsBeforeTheWidgetIsCommitted
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=9
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+INSTRUMENTATION_STATUS: test=closingPickerAllocatesNoWidgetIds
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=9
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=closingPickerAllocatesNoWidgetIds
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=10
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=
+
+INSTRUMENTATION_STATUS: test=deniedBindingReleasesItsAllocatedId
+
+INSTRUMENTATION_STATUS_CODE: 1
+
+INSTRUMENTATION_STATUS: class=com.sidglassos.features.launcher.WidgetHostUiTest
+
+INSTRUMENTATION_STATUS: current=10
+
+INSTRUMENTATION_STATUS: id=AndroidJUnitRunner
+
+INSTRUMENTATION_STATUS: numtests=10
+
+INSTRUMENTATION_STATUS: stream=.
+
+INSTRUMENTATION_STATUS: test=deniedBindingReleasesItsAllocatedId
+
+INSTRUMENTATION_STATUS_CODE: 0
+
+INSTRUMENTATION_RESULT: stream=
+
+
+
+Time: 74.708
+
+
+
+OK (10 tests)
+
+
+
+
+
+INSTRUMENTATION_CODE: -1

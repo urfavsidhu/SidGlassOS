@@ -18,7 +18,7 @@ All seven JPEGs in `references/` were inspected on 19 October 2026. They are vis
 - Original Canvas-drawn silhouettes and atmospheric gradients rather than copying the photographed forest.
 - 28dp card corners, 22dp icon corners, 34dp dock corners, fine top-left highlights.
 - Typography uses Android's sans-serif family, light clock numerals and legible body labels. No unlicensed font files.
-- Frosting is a translucent, softly graded fallback. Compose blur is not advertised as backdrop blur. Avoid blurring app text or icon content.
+- Dashboard cards sample the app-owned forest scene and blur only the background layer on supported hardware. Modal windows may blur behind themselves through public Android APIs. The Home dock preserves arbitrary system wallpaper and uses a tinted optical treatment. Text, icons and RemoteViews stay sharp; high-contrast mode uses a dark film instead of white underneath pale text. See [rendering boundaries](GLASS_AND_HOSTING.md).
 - Balanced performance by default; no continuous animations on dashboard/launcher. Live wallpaper only renders while its surface is visible.
 - Controls describe their real effects. Permission-dependent and preview features are labeled where the user encounters them.
 - Accessibility: minimum 48dp actions, scalable text, content descriptions for icon actions, reduced motion, and high-opacity glass option.

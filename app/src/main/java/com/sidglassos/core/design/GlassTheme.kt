@@ -62,17 +62,19 @@ fun GlassSurface(
     content: @Composable BoxScope.() -> Unit,
 ) {
     val safeOpacity = opacity.takeIf { it.isFinite() }?.coerceIn(.05f, .9f) ?: .16f
+    val highContrast = safeOpacity >= .55f
+    // Raising opacity must not turn the surface white beneath light foreground text.
+    val film = if (highContrast) listOf(GlassColors.Midnight.copy(alpha = .94f), GlassColors.Navy.copy(alpha = .97f))
+        else listOf(Color.White.copy(alpha = safeOpacity.coerceAtMost(.2f)),
+            Color(0xFF899FE8).copy(alpha = safeOpacity.coerceAtMost(.3f) * .55f), GlassColors.Navy.copy(alpha = .32f))
     Box(modifier.shadow(10.dp, shape, clip = false,
         ambientColor = GlassColors.Navy.copy(alpha = .3f), spotColor = GlassColors.Navy.copy(alpha = .4f))
         .clip(shape)
         .border(BorderStroke(1.dp, Brush.linearGradient(listOf(
             Color.White.copy(alpha = .62f), Color(0xFFC1D8FF).copy(alpha = .1f),
             Color(0xFFADB5FF).copy(alpha = .3f)))), shape)) {
-        GlassBackdropLayer(Modifier.matchParentSize())
-        Box(Modifier.matchParentSize().background(Brush.linearGradient(listOf(
-            Color.White.copy(alpha = safeOpacity),
-            Color(0xFF899FE8).copy(alpha = safeOpacity * .55f),
-            GlassColors.Navy.copy(alpha = .32f)))))
+        if (!highContrast) GlassBackdropLayer(Modifier.matchParentSize())
+        Box(Modifier.matchParentSize().background(Brush.linearGradient(film)))
         Box(Modifier.matchParentSize().background(Brush.verticalGradient(listOf(
             Color.White.copy(alpha = .06f), Color.Transparent, Color(0xFF6686D9).copy(alpha = .04f)))))
         content()

@@ -1,0 +1,8 @@
+{
+  "avd": "SidGlassOS_API36",
+  "serial": "emulator-5580",
+  "api": "36",
+  "screenshots": "Unedited Android screencap PNGs",
+  "observed": "Picker, real Android Create consent, hosted native clock, removal confirmed",
+  "debug_apk_sha256": "260CE1B8D5E9EEF406BD92B71B0DAA8D1CB4B82CE75642EFD44C98D405CFB7F7"
+}

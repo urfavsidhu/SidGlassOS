@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import subprocess
 import time
+import uuid
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -32,8 +33,19 @@ def adb(*args: str, timeout: int = 30, binary: bool = False):
 
 
 def hierarchy() -> ET.Element:
-    adb("shell", "uiautomator", "dump", "/sdcard/SidGlassOS-window.xml")
-    return ET.fromstring(adb("shell", "cat", "/sdcard/SidGlassOS-window.xml"))
+    # A failed UIAutomator invocation can leave an old dump behind, even across VM boots.
+    # Use a fresh path and demand explicit success rather than inspecting stale UI state.
+    path = f"/sdcard/SidGlassOS-{uuid.uuid4().hex}.xml"
+    try:
+        for attempt in range(3):
+            result = adb("shell", "uiautomator", "dump", path)
+            if "dumped to:" in result:
+                return ET.fromstring(adb("shell", "cat", path))
+            if attempt < 2:
+                time.sleep(1)  # Let a preceding automation connection detach after a transition.
+        raise RuntimeError("Android did not produce a fresh UI hierarchy; cached dumps were not used")
+    finally:
+        adb("shell", "rm", "-f", path)
 
 
 def node_with_text(tree: ET.Element, value: str):

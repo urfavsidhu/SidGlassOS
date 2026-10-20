@@ -1,90 +1,63 @@
 # Validation results
 
-Updated: 20 October 2026 (Asia/Calcutta); initial complete build: 19 October. Project: workspace root `SidGlassOS`. Version: **0.1.0**, package **com.sidglassos**.
+Updated: 20 October 2026 (Asia/Calcutta). Version **0.2.0**, package **com.sidglassos**, version code **2**. The project is the workspace root. No physical OPPO device has been tested.
 
-## Actual results
+## Build and unit checks
 
-| Check | Result |
-| --- | --- |
-| Development environment | Temurin Java/javac 21.0.12.1; Gradle8.13; SDK platform36 revision2; Build Tools35.0.0; ADB37.0.1 installed and invoked |
-| Wrapper integrity | Standard Gradle8.13 wrapper JAR matches the published SHA-256; distribution URL/checksum pinned |
-| Kotlin/Android debug compilation | Passed |
-| Debug APK assembly | Passed; real APK produced |
-| JVM unit tests | **19 passed, 0 failures, 0 errors, 0 skipped** across four suites |
-| Android lint | **0 errors, 9 warnings**; no lint baseline and no global error suppression |
-| Android UI-test compilation and APK assembly | Passed; five UI tests across two classes |
-| Android UI-test execution | **5 passed, 0 failures** on Android 16/API 36; final run took 46.358s; [raw runner output](test-results/api36-instrumentation.txt) and [device/APK result record](test-results/api36-result.json) |
-| Release compilation / R8 / vital lint / APK assembly | Passed; release APK is **unsigned** |
-| Debug signing verification | `apksigner verify --verbose` passed; one signer, APK Signature Scheme v2 valid |
-| Packaged manifest/permissions | Parsed using AAPT2; package/version/target and permissions checked |
-| Connected-device inventory | No physical device listed before starting the isolated test VM |
-| Emulator installation | Debug app and test APKs installed successfully on project-owned `SidGlassOS_API36`, Google APIs x86_64, Android 16/API 36 |
-| Static home wallpaper | Actual app button used; success message observed on the emulator |
-| Drawer search with the real Android clock | Tapped All apps, typed an unmatched query, observed No matching apps; [record](test-results/real-clock-search.json) and [screenshot](previews/drawer-empty.png) |
-| Visual checks | Four loaded app screens captured and inspected; dark text/system-bar contrast corrected; final Control Center tile contrast also corrected |
-| OPPO handset / performance / battery tests | **Not run**; no connected OPPO phone |
+Debug compilation, debug assembly, JVM tests, Android lint and instrumentation APK assembly completed successfully. The final full Gradle check returned exit code 0 and BUILD SUCCESSFUL in 39s: 81 actionable tasks, 3 executed and 78 up-to-date. The subsequent test synchronization change rebuilt successfully in 21s.
 
-Latest full build command:
+~~~powershell
+& .\scripts\build.ps1 -Tasks @('assembleDebug','testDebugUnitTest','lintDebug','assembleDebugAndroidTest','-Pkotlin.compiler.execution.strategy=in-process','--no-daemon')
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-emulator.ps1
+~~~
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& .\scripts\build.ps1 -Tasks @('assembleDebug','testDebugUnitTest','lintDebug','assembleDebugAndroidTest','assembleRelease')"
-```
+Toolchain: Temurin JDK 21.0.12.1, Gradle 8.13, AGP 8.13.2, Kotlin 2.3.10, SDK 36 and Build Tools 35.0.0. See [environment](ENVIRONMENT.md). Single-use Gradle and in-process Kotlin avoid the restricted host's cached daemon/profile access issues without changing machine settings. Gradle reuses test results when inputs are unchanged.
 
-Gradle reported `BUILD SUCCESSFUL` in 1m54s: 129 actionable tasks, 26 executed and 103 up-to-date. Full output is saved locally at `.tools/build-validation-20261020.log`. The restricted host denied Kotlin daemon cache access; Kotlin's automatic non-daemon compilation fallback completed successfully. Android lint's optional analytics initialization also warned about its unavailable profile directory.
+**27 JVM tests passed**, zero failures, errors or skipped tests. XML reports: app/build/test-results/testDebugUnitTest/.
 
-After the test-fixture adjustments, the instrumentation APK rebuilt successfully in 22s. Final `lintDebug` passed in 7s, with **0 errors and 9 warnings** on the final sources. Its full output is `.tools/lint-final-20261020.log`.
-
-The original 19 October build passed after a clean resource rebuild removed stale adaptive-icon cache entries. Filesystem watching remains disabled for this OneDrive workspace.
-
-## Emulator execution
-
-The isolated VM uses Android Emulator 37.2.12, API 36 Google APIs x86_64 image `BE2A.250530.026.F3`, and the existing Windows Hypervisor Platform. No physical phone, default-Home role or Windows virtualization feature was changed. See [environment](ENVIRONMENT.md) and [repeatable procedure](EMULATOR_TESTING.md).
-
-An initial Home-intent test failed during framework teardown. AndroidX filters lifecycle events against the original launch intent; the production callback correctly changes `Activity.intent`. The test now restores its fixture intent in `finally`, after its unchanged UI assertions. That Home-intent test passed in the subsequent run. This tests callback behavior, not default-Home selection or OPPO gestures. [AndroidX lifecycle matching source](https://github.com/android/android-test/blob/main/core/java/androidx/test/core/app/ActivityScenario.java).
-
-The subsequent drawer-search test encountered `SnapshotStateObserver` multithread access under the Compose test clock; earlier runs passed that test. Independent real UI taps/text entry then passed the same search behavior. Both test fixtures now use `StandardTestDispatcher`, retaining default clock advancement and every assertion, following Google's documented Compose 1.10 recommendation. The corrected-fixture run passed **all five tests**, with each test reporting status 0, `OK (5 tests)`, successful runner completion and an empty collected crash buffer. The precise cause of the earlier intermittent error is not established. [Official Compose testing recommendation](https://android-developers.googleblog.com/2025/12/whats-new-in-jetpack-compose-december.html).
-
-Raw runs remain under `.tools/emulator-tests/`: initial teardown failure `20261020T035601Z`, callback-only teardown failure `20261020T041218Z`, intermittent snapshot error `20261020T041922Z`, and final passing run `20261020T042507Z`. The final runner output and result JSON are also copied to `docs/test-results/`. The owned emulator was shut down after verification.
-
-Early wallpaper capture was obstructed by an emulator System UI error dialog; that interrupted attempt is not counted. The helper was rerun after VM recovery and now waits for loaded screen content. The completed [capture metadata](previews/capture.json) records the actual Android image and APK hash. Screenshots are unedited Android `screencap` PNGs: [dashboard](previews/dashboard.png), [icons](previews/icons.png), [controls](previews/control-center.png), [launcher](previews/launcher.png).
-
-## Test coverage
-
-| Suite | Tests | What it validates |
+| Suite | Tests | Behavior |
 | --- | ---: | --- |
-| `GlassSettingsTest` | 7 | Rendering budgets, invalid/non-finite values, layout uniqueness/order, safe defaults, stale-field merge, concurrent layout preservation and ARGB bounds |
-| `LayoutOrderTest` | 4 | Rearrangement boundaries, missing IDs, stable order and drawer search |
-| `WallpaperFramePolicyTest` | 4 | Mode FPS caps, static reduced-motion/power-saving behavior and bounded particles |
-| `MediaPolicyTest` | 4 | Playing-session selection, actual action flags, independent skip actions and bounded artwork aspect ratio |
+| GlassSettingsTest | 7 | Settings normalization, rendering limits, defaults and concurrent layout preservation |
+| LayoutOrderTest | 4 | App ordering, boundaries and drawer search |
+| WallpaperFramePolicyTest | 4 | Frame caps, reduced motion/power saving and bounded particles |
+| MediaPolicyTest | 4 | Session/action selection and bounded artwork |
+| GlassEffectPolicyTest | 4 | SDK/hardware/power gating, radius caps and crop alignment |
+| WidgetLayoutPolicyTest | 4 | Valid distinct IDs, capacity, provider size limits and ordering |
 
-JVM XML reports: `app/build/test-results/testDebugUnitTest/`. HTML report: `app/build/reports/tests/testDebugUnitTest/index.html`. Lint report: `app/build/reports/lint-results-debug.html`.
+Android lint: **0 errors, 14 warnings** (seven tooling/dependency update advisories and seven optional KTX-style suggestions). Reports: app/build/reports/. There is no global suppression or lint baseline. The BIND_APPWIDGET exception is limited to one documented host-contract declaration: an ordinary APK does not receive this signature permission and must use Android consent. The existing tile API compatibility exception remains narrowly guarded.
 
-Lint warnings consist of six newer-version advisories for intentionally pinned compatible tooling/libraries, and three optional KTX-style suggestions. These are not treated as tested runtime guarantees. A single narrow tile-lint suppression documents the required API29–33 compatibility overload and has a runtime guard; Android34+ uses PendingIntent.
+## Emulator coverage
 
-## Produced artifacts
+**10 UI tests passed, zero failures**, in 74.708s, with an empty collected crash buffer. [Raw runner output](test-results/api36-instrumentation.txt), [device/APK record](test-results/api36-result.json), [JVM result](test-results/unit-result.json). Final run: 20261020T092216Z, completed 20 October 2026 at 09:23:36 UTC. Each test reported status 0 and the runner reported OK (10 tests).
 
-| File | Bytes | Purpose |
-| --- | ---: | --- |
-| `app/build/outputs/apk/debug/app-debug.apk` | 65,307,933 | Signed development build, installed on the emulator |
-| `app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk` | 2,408,712 | Instrumentation package; all five tests executed and passed |
-| `app/build/outputs/apk/release/app-release-unsigned.apk` | 3,476,503 | R8-optimized release output; requires the owner's signing before installation |
+The project-owned **SidGlassOS_API36**, serial **emulator-5580**, runs Android 16/API 36 Google APIs x86_64. The harness verifies AVD identity, installed packages, test discovery count and runner completion. It does not change a physical phone or default-Home selection. Tests use Android's real widget approval without adopting shell permissions or checking persistent Always allow access.
 
-SHA-256 for the debug APK:
+Five existing dashboard/launcher UI tests are retained. Five additional widget tests cover picker cancellation without allocating IDs, denied binding cleanup, native clock content/resizing/activity recreation/removal, required provider configuration before committing, and canceled configuration cleanup. Tests preserve preexisting widgets and remove their own additions. Activity recreation is tested; process death, reboot and every provider are not.
 
-```text
-B4636D922BE94EF61862C1D24EFE618A6B48E21ADABFFF10CB06E1E4A26AAE39
-```
+Earlier failed runs remain in .tools/emulator-tests/. The consent locator was corrected to use Android's real Create action. The independent test provider's missing Kotlin runtime was fixed using platform-only Java. Its title bar covered Save; the fixture now uses a title-free theme and system insets, preserving button labels explicitly. The configuration test advances Compose's test clock until native content is rendered before its UI Automator assertion. Required setup and assertions were retained. These fixture components are absent from the production APK.
 
-SHA-256 for the unsigned release APK:
+The screenshot helper previously read a stale hierarchy after a failed dump. It now requires a successful fresh UUID-named dump with bounded retries. Captures run only when instrumentation is idle because Android permits one UI automation connection. Screenshots are unedited Android screencap PNGs; [metadata](previews/capture.json) identifies the APK and wallpaper observation.
 
-```text
-AE41161DD91579E3F822EC17D0AE27812170044C1A11E66EF3171CDAFD590C81
-```
+Final loaded [dashboard](previews/dashboard.png), [icons](previews/icons.png), [controls](previews/control-center.png) and [launcher](previews/launcher.png) were captured and visually inspected. The actual app's static home-wallpaper button returned success on the VM. The [widget picker](previews/widget-picker.png) and [hosted native clock](previews/hosted-clock.png) were also captured after real Create approval; its temporary instance was removed through the app. [Widget capture record](previews/widget-capture.json). The picker includes the test-only provider installed for instrumentation, which is absent from ordinary app installs.
 
-The debug package requests SET_WALLPAPER, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE, MODIFY_AUDIO_SETTINGS and POST_NOTIFICATIONS, plus AndroidX's app-specific non-exported-receiver signature permission. It has **no INTERNET, overlay, camera-capture, location, storage, QUERY_ALL_PACKAGES or accessibility permission**. The optional media service is system-bound through BIND_NOTIFICATION_LISTENER_SERVICE and requires a separate user grant; this is not an automatically granted uses-permission.
+Temporary capture widgets were removed, pending setup was empty, the final crash buffer was empty, and the owned emulator was shut down after verification.
 
-## Remaining gates and scope
+## Signed debug artifact
 
-Emulator installation, screenshots and UI tests cover only the observations recorded above. Media-session delivery/revocation, native widget hosting/updates, live-wallpaper lifecycle, animation smoothness, battery use and exact ColorOS behavior still need their device acceptance checks. Run [DEVICE_TESTS.md](DEVICE_TESTS.md) on the actual OPPO A5 Pro 5G build. Its Android/API level has not been measured from a phone.
+APK: **app/build/outputs/apk/debug/app-debug.apk**, **66,092,401 bytes**. Signature verification passed using apksigner verify --verbose: APK Signature Scheme v2, one signer. AAPT2 reports minimum API 29, target API 36, version 0.2.0/code 2.
 
-The delivered project implements the launcher, original icon framing/assignment, in-app Control Center and optional tile, local notification test/preview, lock-screen design preview, static/live wallpaper, four native widgets, optional local media-session integration and customization dashboard. Real SystemUI/secure-lock-screen replacement and arbitrary `.theme` import are not claimed. Floating overlays, notification mirroring and external widget hosting inside this launcher are not included; the in-app panel and published native widgets provide the supported alternatives. All seven reference files remain unchanged outside the app's packaged resources.
+SHA-256:
+
+~~~text
+260CE1B8D5E9EEF406BD92B71B0DAA8D1CB4B82CE75642EFD44C98D405CFB7F7
+~~~
+
+This revision's release build/signing was not requested or validated; an older unsigned release output is not the current deliverable. The debug package has no INTERNET, overlay, accessibility, camera-capture, location, storage or QUERY_ALL_PACKAGES permission. Optional media-session access remains a separate user grant.
+
+## Unsupported and untested behavior
+
+[Glass and hosting](GLASS_AND_HOSTING.md) documents the implementation. Blur samples the app-owned scene on supported API31+ hardware. App/system Battery Saver and unavailable acceleration use tinted fills. Modal blur follows Android's capability signal. The Home dock does not sample arbitrary system wallpaper. Radius caps are implementation budgets, not measured handset performance guarantees.
+
+Widgets use dedicated Home pages, up to 12. Mixed icon/widget grids, drag resize handles, external pin-request intake and work/private-profile widgets remain unsupported. Protected SystemUI/notification-shade replacement, secure lock-screen replacement, other signed apps' resource modifications and arbitrary OPPO .theme import remain unsupported.
+
+**OPPO ColorOS 16 remains untested**, including actual firmware/API level, GPU/window blur, Home-role persistence, gesture/Recents behavior, media-session delivery and access revocation, live-wallpaper lifecycle, provider compatibility, reboot recovery, smoothness, thermal load and battery use. Follow the [physical-device checklist](DEVICE_TESTS.md). No physical-device compatibility is claimed.

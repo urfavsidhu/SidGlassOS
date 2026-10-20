@@ -92,6 +92,9 @@ class WidgetHostUiTest {
         assertEquals(baseline, hostValue { it.widgets.map(HostedWidget::id).toSet() })
         device.findObject(By.text("Save test widget")).click()
         waitHost { it.widgets.any { widget -> widget.id !in baseline } }
+        val item = hostValue { it.widgets.first { widget -> widget.id !in baseline } }
+        // Advance Compose's test clock through page navigation before querying native UI automation.
+        compose.waitUntil(15_000) { hasNativeView(item.id, "Configured test widget") }
         assertTrue(device.wait(Until.hasObject(By.text("Configured test widget")), 15_000))
     }
 
@@ -126,12 +129,13 @@ class WidgetHostUiTest {
 
     private fun waitHost(predicate: (LauncherWidgetHost) -> Boolean) { compose.waitUntil(20_000) { hostValue(predicate) } }
     private fun systemIds(): Set<Int> = AppWidgetHost(instrumentation.targetContext, LauncherWidgetHost.HOST_ID).appWidgetIds.toSet()
-    private fun hasNativeView(id: Int): Boolean {
+    private fun hasNativeView(id: Int, expectedText: String? = null): Boolean {
         var found = false
         compose.activityRule.scenario.onActivity { activity ->
             fun visit(view: View) {
                 if (view is AppWidgetHostView && view.appWidgetId == id) {
-                    fun hasClock(child: View): Boolean = child is android.widget.TextClock ||
+                    fun hasClock(child: View): Boolean = (if (expectedText == null) child is android.widget.TextClock
+                        else child is android.widget.TextView && child.text.toString() == expectedText) ||
                         (child is ViewGroup && (0 until child.childCount).any { hasClock(child.getChildAt(it)) })
                     if (hasClock(view)) found = true
                 }

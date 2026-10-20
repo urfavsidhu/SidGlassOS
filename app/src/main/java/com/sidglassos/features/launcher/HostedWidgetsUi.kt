@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.sidglassos.core.design.GlassCard
@@ -86,7 +87,7 @@ fun HostedWidgetPage(item: HostedWidget, host: LauncherWidgetHost, index: Int, c
             if (info == null) {
                 GlassCard(Modifier.fillMaxWidth()) { Text("This widget's app is unavailable. Reinstall or enable its app, or remove the widget.") }
             } else {
-                val density = context.resources.displayMetrics.density
+                val density = LocalDensity.current.density
                 val padding = AppWidgetHostView.getDefaultPaddingForWidget(context, info.provider, null)
                 val canResize = info.resizeMode and AppWidgetProviderInfo.RESIZE_VERTICAL != 0
                 val minimumPixels = if (canResize && info.minResizeHeight > 0) info.minResizeHeight else info.minHeight
@@ -100,7 +101,7 @@ fun HostedWidgetPage(item: HostedWidget, host: LauncherWidgetHost, index: Int, c
                 } else {
                     AndroidView(factory = {
                         try { host.createView(item.id, info) }
-                        catch (_: RuntimeException) { TextView(it).apply { text = "The widget could not be displayed. Try reopening Home." } }
+                        catch (_: RuntimeException) { TextView(it).apply { setText(com.sidglassos.R.string.widget_host_error) } }
                     }, update = { view ->
                         if (view is SidWidgetHostView) view.updateSize(width, height)
                     }, modifier = Modifier.fillMaxWidth().height(height.dp))

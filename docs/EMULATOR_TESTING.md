@@ -20,9 +20,9 @@ From the workspace root:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-emulator.ps1
 ```
 
-The harness creates `SidGlassOS_API36` below `.tools/avd/`, uses port 5580, starts a hidden headless VM with 2 GB of RAM and two CPU cores, installs only this app and its instrumentation APK, then runs the AndroidJUnit runner. It requires an actual positive `OK (N tests)` result and successful completion; compilation alone cannot pass the harness. Five UI tests are currently authored: dashboard/control navigation, icon screen content, page restoration after recreation, drawer search, and Home-intent handling.
+The harness creates `SidGlassOS_API36` below `.tools/avd/`, uses port 5580, starts a hidden headless VM with 2 GB of RAM and two CPU cores, installs only this app and its instrumentation APK, then runs the AndroidJUnit runner. It requires an actual positive `OK (N tests)` result and successful completion; compilation alone cannot pass the harness. Ten UI tests are authored: the original five navigation/search/restoration/Home-intent checks plus widget picker cancellation, binding denial, native clock resize/recreation/removal, required configuration and configuration cancellation. The harness requires the exact expected test count (default 10).
 
-Both Compose fixtures explicitly use `StandardTestDispatcher`, preserving normal clock advancement and synchronization. The Home-intent fixture restores its original launch intent only after its UI assertions so AndroidX can observe activity destruction. See the source comments and [validation notes](VALIDATION.md) for the observed failures and final passing run.
+All Compose fixtures explicitly use `StandardTestDispatcher`, preserving normal clock advancement and synchronization. The Home-intent fixture restores its original launch intent only after its UI assertions so AndroidX can observe activity destruction. See the source comments and [validation notes](VALIDATION.md) for the observed failures and final passing run.
 
 Every ADB operation targets `emulator-5580`. The harness rejects occupied ports and a conflicting AVD. It records raw instrumentation/crash output, APK hashes and a result under `.tools/emulator-tests/<run timestamp>/`. Failed tests retain their output. Normal cleanup stops only the emulator process started by the harness.
 
@@ -35,7 +35,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\test-emulator.ps1 
 python .\scripts\capture-emulator.py --apply-wallpaper
 ```
 
-The Python helper verifies the project AVD identity, uses the app's **Set home wallpaper** button on that VM, waits for the app's real success message, and captures four unedited Android screenshots under `docs/previews/`. It does not generate or modify image content. Omit `--apply-wallpaper` to capture without applying a wallpaper. Python 3 is needed only for this optional capture helper.
+The Python helper requires a fresh UI hierarchy for each query, with bounded retries after transitions, and never reuses a saved error dialog. Run it only when instrumentation is idle; Android permits one UI automation connection. It verifies the project AVD identity, uses the app's **Set home wallpaper** button on that VM, waits for the app's real success message, and captures four unedited Android screenshots under `docs/previews/`. It does not generate or modify image content. Omit `--apply-wallpaper` to capture without applying a wallpaper. Python 3 is needed only for this optional capture helper.
 
 These are procedure descriptions, not a claim that a run has passed. An interrupted helper or an obstructing Android/System UI dialog is not a wallpaper or screenshot pass. Record the interruption and rerun the affected check; a screenshot's presence alone does not establish test success. A completed emulator wallpaper smoke check still leaves OPPO wallpaper destinations and rendering unverified. See [VALIDATION.md](VALIDATION.md) for actual outcomes.
 
